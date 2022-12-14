@@ -38,7 +38,7 @@
 class simulationController
 {
 private:
-    bool mAutoSprayerEnabled;
+    bool mSensorDetectedField;
     bool mAutoSprayerEngaged;
     int mCurrentLength;
     int mCurrentSprayLine;

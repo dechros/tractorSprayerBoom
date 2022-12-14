@@ -12,8 +12,9 @@
 
 autoSprayer::autoSprayer(/* args */)
 {
-    mAutoSprayerEnabled = false;
+    mSensorDetectedField = false;
     mAutoSprayerEngaged = false;
+    attachmentPosition = ATTACHMENT_POSITION_MAX;
 }
 
 autoSprayer::~autoSprayer()
@@ -38,17 +39,62 @@ void autoSprayer::threadFunc()
 {
     while (true)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         try
         {
-            mAutoSprayerEnabled = mSimulation->getSensorData();
-            mAutoSprayerEngaged = mSimulation->getButtonEnableData();
-            if (mAutoSprayerEnabled == true)
+            /* Get the button and sensor variables updated */
+            updateVariables();
+            if (mAutoSprayerEngaged == true)
             {
-
+                mConsole->consoleWrite("Ergo button is enabled.");
+                /* Check sensor data for field detection */
+                if (mSensorDetectedField == true)
+                {
+                    /* Prepare the attachment for spraying */
+                    lockTheWheels(true);
+                    mConsole->consoleWrite("Wheels are locked.");
+                    if (attachmentPosition > ATTACHMENT_POSITION_MIN)
+                    {
+                        mConsole->consoleWrite("Attachment is going to bottom. Position : " + std::to_string(attachmentPosition));
+                        driveAttachment(ATTACHMENT_POSITION_DOWN);
+                    }
+                    else
+                    {
+                        mConsole->consoleWrite("Attachment is locked at bottom.");
+                        
+                    }
+                }
+                else
+                {
+                    /* Prepare the attachment for turning */
+                    lockTheWheels(false);
+                    mConsole->consoleWrite("Wheels are unlocked.");
+                    if (attachmentPosition < ATTACHMENT_POSITION_MAX)
+                    {
+                        mConsole->consoleWrite("Attachment is going to top. Position : " + std::to_string(attachmentPosition));
+                        driveAttachment(ATTACHMENT_POSITION_UP);
+                    }
+                    else
+                    {
+                        mConsole->consoleWrite("Attachment is locked at top.");
+                    }
+                }
             }
-            mConsole->consoleWrite("mAutoSprayerEnabled : " + std::to_string(mAutoSprayerEnabled));
-            mConsole->consoleWrite("mAutoSprayerEngaged : " + std::to_string(mAutoSprayerEngaged));
+            else
+            {
+                /* Prepare the attachment for turning */
+                mConsole->consoleWrite("Ergo button is disabled.");
+                mConsole->consoleWrite("Wheels are unlocked.");
+                if (attachmentPosition < ATTACHMENT_POSITION_MAX)
+                {
+                    mConsole->consoleWrite("Attachment is going to top. Position : " + std::to_string(attachmentPosition));
+                    driveAttachment(ATTACHMENT_POSITION_UP);
+                }
+                else
+                {
+                    mConsole->consoleWrite("Attachment is locked at top.");
+                }
+            }
         }
         catch (std::runtime_error &e)
         {
@@ -71,4 +117,27 @@ void autoSprayer::setConsoleController(consoleController *console)
 void autoSprayer::setSimulationController(simulationController *simulation)
 {
     mSimulation = simulation;
+}
+
+void autoSprayer::updateVariables()
+{
+    mSensorDetectedField = mSimulation->getSensorData();
+    mAutoSprayerEngaged = mSimulation->getButtonEnableData(); 
+}
+
+void autoSprayer::driveAttachment(int movementPosition)
+{
+    if (movementPosition == ATTACHMENT_POSITION_UP)
+    {
+        attachmentPosition++;
+    }
+    else if (movementPosition == ATTACHMENT_POSITION_DOWN)
+    {
+        attachmentPosition--;
+    }
+}
+
+void autoSprayer::lockTheWheels(bool status)
+{
+    return;
 }

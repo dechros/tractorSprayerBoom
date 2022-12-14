@@ -22,6 +22,12 @@
 #ifndef AUTO_SPRAYER_H
 #define AUTO_SPRAYER_H
 
+#define ATTACHMENT_POSITION_MIN 0
+#define ATTACHMENT_POSITION_MAX 5
+
+#define ATTACHMENT_POSITION_UP 0
+#define ATTACHMENT_POSITION_DOWN 1
+
 /**
  * @brief This class controls the sprayer attachment
  */
@@ -36,8 +42,9 @@ private:
      */
     void threadFunc();
 public:
-    bool mAutoSprayerEnabled;
+    bool mSensorDetectedField;
     bool mAutoSprayerEngaged;
+    int attachmentPosition;
     /**
      * @brief Create the auto sprayer object
      */
@@ -65,6 +72,22 @@ public:
      * @param console simulation object
      */
     void setSimulationController(simulationController *simulation);
+    /**
+     * @brief Updates the variables about sensor and buttons
+     */
+    void updateVariables();
+    /**
+     * @brief Drives the attachment motors according to the input
+     * 
+     * @param movementPosition Attachment movement position up/down
+     */
+    void driveAttachment(int movementPosition);
+    /**
+     * @brief Locks the attachment wheels or releases them
+     * 
+     * @param status Lock status
+     */
+    void lockTheWheels(bool status);
 };
 
 #endif
