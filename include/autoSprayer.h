@@ -86,8 +86,10 @@ public:
      * @brief Locks the attachment wheels or releases them
      * 
      * @param status Lock status
+     * @return true Locked
+     * @return false Unlocked
      */
-    void lockTheWheels(bool status);
+    bool lockTheWheels(bool status);
 };
 
 #endif

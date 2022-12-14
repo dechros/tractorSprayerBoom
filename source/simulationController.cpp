@@ -13,7 +13,7 @@
 simulationController::simulationController(/* args */)
 {
     mSensorDetectedField = false;
-    mAutoSprayerEngaged = false;
+    mAutoSprayerEngaged = true;
     mCurrentLength = MIN_TRACTOR_RANGE;
     mCurrentSprayLine = MIN_SPRAY_LINES;
     mTractorPosition = TRACTOR_POSITION_UP;
