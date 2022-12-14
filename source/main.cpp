@@ -11,6 +11,7 @@
 #include <iostream>
 #include "autoSprayer.h"
 #include "consoleController.h"
+#include "simulationController.h"
 
 /**
  * @brief Enterance point of the program
@@ -21,12 +22,15 @@ int main(void)
 {
     /* Object Creation */
     consoleController console;
+    simulationController simulation;
     autoSprayer sprayer;
     
-    /* Setting the Relationships*/
+    /* Setting the relationships */
     sprayer.setConsoleController(&console);
+    sprayer.setSimulationController(&simulation);
+    simulation.setConsoleController(&console);
     
-    /* Creating the Threads*/
+    /* Creating the threads*/
     if (console.run() == false)
     {
         std::cout << "Console Thread Init Error" << std::endl;
@@ -34,6 +38,14 @@ int main(void)
     else
     {
         console.consoleWrite("Console Thread OK");
+    }
+    if (simulation.run() == false)
+    {
+        console.consoleWrite("Simulation Thread Init Error");
+    }
+    else
+    {
+        console.consoleWrite("Simulation Thread OK");
     }
     if (sprayer.run() == false)
     {
@@ -44,7 +56,7 @@ int main(void)
         console.consoleWrite("Sprayer Thread OK");
     }
     
-    /* Main function should remain inactive. */
+    /* Main function should remain inactive */
     while (1)
     {
         std::this_thread::yield();

@@ -15,7 +15,9 @@
 #include <functional>
 #include <stdexcept>
 #include <chrono>
+#include <string>
 #include "consoleController.h"
+#include "simulationController.h"
 
 #ifndef AUTO_SPRAYER_H
 #define AUTO_SPRAYER_H
@@ -28,11 +30,14 @@ class autoSprayer
 private:
     std::thread mThread;
     consoleController *mConsole;
+    simulationController *mSimulation;
     /**
      * @brief Sprayer I/O thread
      */
     void threadFunc();
 public:
+    bool mAutoSprayerEnabled;
+    bool mAutoSprayerEngaged;
     /**
      * @brief Create the auto sprayer object
      */
@@ -54,6 +59,12 @@ public:
      * @param console Console object
      */
     void setConsoleController(consoleController *console);
+     /**
+     * @brief Set the simulation controller object
+     * 
+     * @param console simulation object
+     */
+    void setSimulationController(simulationController *simulation);
 };
 
 #endif

@@ -12,6 +12,8 @@
 
 autoSprayer::autoSprayer(/* args */)
 {
+    mAutoSprayerEnabled = false;
+    mAutoSprayerEngaged = false;
 }
 
 autoSprayer::~autoSprayer()
@@ -36,10 +38,17 @@ void autoSprayer::threadFunc()
 {
     while (true)
     {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
         try
         {
-            mConsole->consoleWrite("Auto Sprayer Running");
+            mAutoSprayerEnabled = mSimulation->getSensorData();
+            mAutoSprayerEngaged = mSimulation->getButtonEnableData();
+            if (mAutoSprayerEnabled == true)
+            {
+
+            }
+            mConsole->consoleWrite("mAutoSprayerEnabled : " + std::to_string(mAutoSprayerEnabled));
+            mConsole->consoleWrite("mAutoSprayerEngaged : " + std::to_string(mAutoSprayerEngaged));
         }
         catch (std::runtime_error &e)
         {
@@ -57,4 +66,9 @@ void autoSprayer::threadFunc()
 void autoSprayer::setConsoleController(consoleController *console)
 {
     mConsole = console;
+}
+
+void autoSprayer::setSimulationController(simulationController *simulation)
+{
+    mSimulation = simulation;
 }
