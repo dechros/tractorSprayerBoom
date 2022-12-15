@@ -44,25 +44,9 @@ void autoSprayer::threadFunc()
         {
             /* Get the button and sensor variables updated */
             updateVariables();
-            if (mAutoSprayerEngaged == false)
+            if ((mAutoSprayerEngaged == false) || (mSensorDetectedField == false))
             {
                 mConsole->consoleWrite("Ergo button is disabled.");
-                /* Prepare the attachment for turning */
-                lockTheWheels(false);
-                mConsole->consoleWrite("Wheels are unlocked.");
-                if (attachmentPosition < ATTACHMENT_POSITION_MAX)
-                {
-                    mConsole->consoleWrite("Attachment is going to top. Position : " + std::to_string(attachmentPosition));
-                    driveAttachment(ATTACHMENT_POSITION_UP);
-                }
-                else
-                {
-                    mConsole->consoleWrite("Attachment is locked at top.");
-                }
-            }
-            else if (mSensorDetectedField == false)
-            {
-                mConsole->consoleWrite("Ergo button is enabled.");
                 /* Prepare the attachment for turning */
                 lockTheWheels(false);
                 mConsole->consoleWrite("Wheels are unlocked.");
